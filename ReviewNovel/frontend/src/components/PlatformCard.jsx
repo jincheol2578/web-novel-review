@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ReviewItem from './ReviewItem';
+import { useReviews } from '../hooks/useReviews';
 import styles from './PlatformCard.module.css';
 
 const PLATFORM_COLORS = {
@@ -36,7 +37,7 @@ export default function PlatformCard({ data }) {
     rating, 
     ratingCount, 
     downloadCount, 
-    reviews, 
+    reviews: crawledReviews,
     error, 
     thumbnail,
     genre,
@@ -46,32 +47,53 @@ export default function PlatformCard({ data }) {
     category
   } = data;
   
+  // Supabase 연동 리뷰 훅 사용
+  const { 
+    reviews: dbReviews, 
+    loading: reviewsLoading, 
+    addReview 
+  } = useReviews(matchedTitle, platformKey);
+
   const [showReviewInput, setShowReviewInput] = useState(false);
-  const [myReviews, setMyReviews] = useState([]);
   const [reviewText, setReviewText] = useState('');
-  const [reviewAuthor, setReviewAuthor] = useState('익명');
+  const [reviewAuthor, setReviewAuthor] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const accent = PLATFORM_COLORS[platformKey] || '#ccc';
   const isSuccess = status === 'success';
   const meta = RATING_META[platformKey] || { icon: '★', ratingLabel: '평점', countLabel: '' };
 
-  const handleAddReview = () => {
-    if (!reviewText.trim()) return;
-    
-    const newReview = {
-      text: reviewText,
-      author: reviewAuthor || '익명',
-      date: '방금 전',
-      url: url,
-      isUserGenerated: true
-    };
-    
-    setMyReviews([...myReviews, newReview]);
-    setReviewText('');
-    setShowReviewInput(false);
-  };
+  // 크롤링된 리뷰와 DB 리뷰 합치기
+  const allReviews = [
+    ...(dbReviews || []).map(r => ({
+      ...r,
+      text: r.content,
+      author: r.author_name,
+      date: new Date(r.created_at).toLocaleDateString('ko-KR'),
+      isDbReview: true
+    })),
+    ...(crawledReviews || []).map(r => ({ ...r, isDbReview: false }))
+  ];
 
-  const allReviews = [...(reviews || []), ...myReviews];
+  const handleAddReview = async () => {
+    if (!reviewText.trim() || submitting) return;
+    
+    setSubmitting(true);
+    try {
+      await addReview({
+        content: reviewText,
+        authorName: reviewAuthor || '익명'
+      });
+      setReviewText('');
+      setReviewAuthor('');
+      setShowReviewInput(false);
+    } catch (err) {
+      console.error('리뷰 등록 실패:', err);
+      alert('리뷰 등록에 실패했습니다.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div
@@ -163,15 +185,17 @@ export default function PlatformCard({ data }) {
                 <button 
                   className={styles.submitReviewBtn}
                   onClick={handleAddReview}
-                  disabled={!reviewText.trim()}
+                  disabled={!reviewText.trim() || submitting}
                 >
-                  등록
+                  {submitting ? '등록 중...' : '등록'}
                 </button>
               </div>
             )}
 
-            {allReviews.length > 0 ? (
-              allReviews.map((r, i) => <ReviewItem key={i} review={r} novelUrl={url} />)
+            {reviewsLoading ? (
+              <p className={styles.noReviews}>리뷰를 불러오는 중...</p>
+            ) : allReviews.length > 0 ? (
+              allReviews.map((r, i) => <ReviewItem key={i} review={r} />)
             ) : (
               <p className={styles.noReviews}>아직 리뷰가 없습니다. 첫 리뷰를 남겨보세요!</p>
             )}

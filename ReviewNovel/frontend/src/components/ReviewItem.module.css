@@ -1,10 +1,9 @@
 .item {
-  display: block;
-  text-decoration: none;
-  background: #f7f7f7;
+  padding: 0.75rem;
   border-radius: 8px;
-  padding: 0.6rem 0.75rem;
-  transition: background 0.12s;
+  background: #f9f9f9;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s;
 }
 
 .item:hover {
@@ -12,29 +11,26 @@
 }
 
 .text {
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   color: #333;
-  margin: 0 0 0.3rem;
+  margin: 0 0 0.5rem;
   line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  word-break: break-word;
 }
 
 .meta {
   display: flex;
-  gap: 0.5rem;
+  justify-content: space-between;
   align-items: center;
+  font-size: 0.75rem;
+  color: #888;
 }
 
 .author {
-  font-size: 0.72rem;
-  color: #888;
-  font-weight: 500;
+  font-weight: 600;
+  color: #555;
 }
 
 .date {
-  font-size: 0.72rem;
-  color: #bbb;
+  font-style: italic;
 }

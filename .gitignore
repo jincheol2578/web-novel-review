@@ -1,6 +1,9 @@
 node_modules/
-dist/
-logs/
-.env
-.claude/
-.playwright-mcp/
+ReviewNovel/frontend/dist/
+ReviewNovel/frontend/.env
+ReviewNovel/frontend/.env.local
+ReviewNovel/backend/logs/
+ReviewNovel/.claude/
+ReviewNovel/.playwright-mcp/
+*.tgz
+.DS_Store
