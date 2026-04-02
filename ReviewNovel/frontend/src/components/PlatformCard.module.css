@@ -1,0 +1,96 @@
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  border: 1.5px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.15s;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent, #ccc);
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.muted {
+  opacity: 0.6;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.platformBadge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #333;
+  letter-spacing: -0.01em;
+}
+
+.rating {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.ratingCount {
+  font-weight: 400;
+  color: #888;
+  font-size: 0.78rem;
+}
+
+.matchedTitle {
+  font-size: 0.9rem;
+  color: #555;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.matchedTitle:hover {
+  color: #111;
+  text-decoration: underline;
+}
+
+.reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.noReviews {
+  font-size: 0.82rem;
+  color: #bbb;
+  margin: 0;
+}
+
+.statusMessage {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: #999;
+  padding: 0.5rem 0;
+}
+
+.errorDetail {
+  font-size: 0.75rem;
+  color: #bbb;
+}

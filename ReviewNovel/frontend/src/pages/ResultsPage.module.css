@@ -1,0 +1,64 @@
+.container {
+  min-height: 100vh;
+  background: #fafafa;
+  padding-bottom: 4rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid #e8e8e8;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.back {
+  font-size: 0.9rem;
+  color: #555;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.back:hover {
+  color: #111;
+}
+
+.status {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.error {
+  background: #fff0f0;
+  color: #c00;
+  padding: 0.75rem 2rem;
+  font-size: 0.9rem;
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.novelBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.novelTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #111;
+}
