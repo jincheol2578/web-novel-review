@@ -77,7 +77,22 @@ class MunpiaCrawler extends BaseCrawler {
       }
     });
 
-    return { matchedTitle, url: novelUrl, rating, ratingCount, reviews };
+    // 썸네일 (og:image)
+    let thumbnail = '';
+    const ogImage = $detail('meta[property="og:image"]').attr('content');
+    if (ogImage) {
+      thumbnail = ogImage.replace(/&amp;/g, '&');
+    }
+
+    return { 
+      matchedTitle, 
+      url: novelUrl, 
+      rating, 
+      ratingCount, 
+      thumbnail,
+      genre: [],
+      reviews 
+    };
   }
 }
 

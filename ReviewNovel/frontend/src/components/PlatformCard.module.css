@@ -1,96 +1,204 @@
 .card {
   background: #fff;
   border-radius: 12px;
-  padding: 1.25rem;
-  border: 1.5px solid #e8e8e8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  border: 1px solid #eee;
+}
+
+.cardHeader {
   position: relative;
+}
+
+.thumbnailWrapper {
+  width: 100%;
+  height: 180px;
   overflow: hidden;
-  transition: box-shadow 0.15s;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--accent, #ccc);
-}
-
-.card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-}
-
-.muted {
-  opacity: 0.6;
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .cardTop {
+  padding: 12px 16px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .platformBadge {
-  font-size: 0.8rem;
+  background: var(--accent);
+  color: #000;
   font-weight: 700;
-  color: #333;
-  letter-spacing: -0.01em;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 20px;
 }
 
 .rating {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
+  color: #333;
   font-weight: 600;
-  color: #111;
 }
 
 .ratingCount {
+  color: #777;
   font-weight: 400;
-  color: #888;
-  font-size: 0.78rem;
+  font-size: 0.85rem;
 }
 
 .matchedTitle {
-  font-size: 0.9rem;
-  color: #555;
+  display: block;
+  padding: 16px 16px 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111;
   text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.4;
 }
 
 .matchedTitle:hover {
-  color: #111;
+  color: var(--accent);
   text-decoration: underline;
 }
 
+.metaInfo {
+  padding: 0 16px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.metaTag {
+  font-size: 0.75rem;
+  background: #f0f2f5;
+  color: #555;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.complete {
+  background: #e6f4ea;
+  color: #1e7e34;
+}
+
+.ongoing {
+  background: #fff8e1;
+  color: #f57c00;
+}
+
 .reviews {
+  flex: 1;
+  padding: 0 16px 16px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 8px;
+}
+
+.reviewsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 0;
+}
+
+.reviewsHeader h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.addReviewBtn {
+  background: none;
+  border: 1px solid #ddd;
+  color: #555;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.addReviewBtn:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+}
+
+.reviewInputForm {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 8px;
+}
+
+.reviewAuthorInput,
+.reviewTextInput {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.reviewTextInput {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.submitReviewBtn {
+  align-self: flex-end;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.submitReviewBtn:hover:not(:disabled) {
+  opacity: 1;
+}
+
+.submitReviewBtn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 
 .noReviews {
-  font-size: 0.82rem;
-  color: #bbb;
-  margin: 0;
+  color: #999;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.muted {
+  opacity: 0.7;
 }
 
 .statusMessage {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-size: 0.85rem;
-  color: #999;
-  padding: 0.5rem 0;
+  padding: 32px 16px;
+  text-align: center;
+  color: #777;
 }
 
 .errorDetail {
-  font-size: 0.75rem;
-  color: #bbb;
+  display: block;
+  font-size: 0.85rem;
+  color: #dc3545;
+  margin-top: 4px;
 }

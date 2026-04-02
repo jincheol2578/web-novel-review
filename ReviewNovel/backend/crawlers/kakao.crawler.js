@@ -106,6 +106,7 @@ class KakaoCrawler extends BaseCrawler {
       category: best.category,
       subCategory: best.subCategory,
       authors: best.authors,
+      genre: [best.category, best.subCategory].filter(Boolean),
       reviews,
     };
   }

@@ -67,7 +67,22 @@ class NaverCrawler extends BaseCrawler {
       }
     });
 
-    return { matchedTitle, url: novelUrl, rating, ratingCount, downloadCount, reviews };
+    // 썸네일 (og:image)
+    let thumbnail = '';
+    const ogImage = $detail('meta[property="og:image"]').attr('content');
+    if (ogImage) {
+      thumbnail = ogImage.replace(/&amp;/g, '&');
+    }
+
+    return { 
+      matchedTitle, 
+      url: novelUrl, 
+      rating, 
+      ratingCount, 
+      downloadCount, 
+      thumbnail,
+      reviews 
+    };
   }
 }
 

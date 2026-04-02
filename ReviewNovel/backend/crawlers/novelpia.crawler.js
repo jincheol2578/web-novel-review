@@ -74,7 +74,7 @@ class NovelpaCrawler extends BaseCrawler {
       rating,
       ratingCount,
       genre: best.genre,
-      writer: best.writer,
+      author: best.writer,
       isComplete: best.isComplete,
       reviews,
     };
