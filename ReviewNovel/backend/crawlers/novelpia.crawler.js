@@ -3,7 +3,7 @@
 const { BaseCrawler, sleep } = require('./base.crawler');
 const cheerio = require('cheerio');
 
-class NovelpaCrawler extends BaseCrawler {
+class NovelpiaCrawler extends BaseCrawler {
   constructor() {
     super('노벨피아', 'novelpia');
   }
@@ -81,4 +81,4 @@ class NovelpaCrawler extends BaseCrawler {
   }
 }
 
-module.exports = NovelpaCrawler;
+module.exports = NovelpiaCrawler;
