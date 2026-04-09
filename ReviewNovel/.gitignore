@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+*.log
+
+# Environment variables
+.env
+.env.local
+
+# Build output
+dist/
+build/
+*.local
+
+# Logs
+logs/
+
+# Editor
+.vscode/
+.idea/
+.DS_Store
+
+# Test artifacts
+coverage/
+*.test.js

@@ -7,3 +7,4 @@ ReviewNovel/.claude/
 ReviewNovel/.playwright-mcp/
 *.tgz
 .DS_Store
+ReviewNovel/supabase_schema.sql

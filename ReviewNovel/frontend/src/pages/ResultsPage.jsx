@@ -77,6 +77,7 @@ export default function ResultsPage() {
                 (p) => !results[title]?.platforms[p]
               )}
               done={done}
+              novelTitle={title}
             />
           </div>
         ))}

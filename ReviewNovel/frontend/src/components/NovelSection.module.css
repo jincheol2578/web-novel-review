@@ -3,3 +3,76 @@
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
 }
+
+.aiSummarySection {
+  grid-column: 1 / -1;
+}
+
+.aiSummaryButton {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s;
+  display: block;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.aiSummaryButton:hover {
+  background: linear-gradient(135deg, #6d28d9, #9333ea);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+}
+
+.aiSummaryButton:disabled {
+  background: #555;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.platformSummaryBox {
+  margin-bottom: 12px;
+  border: 1px solid #3b1d7a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.platformSummaryHeader {
+  background: #1a1b3e;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.platformName {
+  font-weight: 600;
+  color: #c4b5fd;
+  font-size: 14px;
+}
+
+.summarizeBtn {
+  background: #7c3aed;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.summarizeBtn:hover {
+  background: #6d28d9;
+}
+
+.summarizeBtn:disabled {
+  background: #444;
+  cursor: not-allowed;
+}
