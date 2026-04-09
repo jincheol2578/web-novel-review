@@ -22,3 +22,7 @@ logs/
 # Test artifacts
 coverage/
 *.test.js
+
+# Backend environment files
+backend/.env
+backend/.env.example
