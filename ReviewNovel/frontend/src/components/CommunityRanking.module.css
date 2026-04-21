@@ -1,0 +1,79 @@
+.section {
+  width: 100%;
+  max-width: 900px;
+  margin-top: 2rem;
+  background: #1a1b3a;
+  border: 1px solid #2a2b4a;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #e0e0e0;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #2a2b4a;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 6px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.item:hover {
+  background: #252650;
+}
+
+.rank {
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #2a2b4a;
+  color: #94a3b8;
+}
+
+.novelTitle {
+  flex: 1;
+  font-size: 13px;
+  color: #e0e0e0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.avg {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.avg small {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.count {
+  font-size: 11px;
+  color: #6b6b8a;
+}

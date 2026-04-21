@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 export function useReviews(novelTitle, platformKey) {
+  const { user } = useAuth();
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 리뷰 불러오기
   const fetchReviews = useCallback(async () => {
     if (!novelTitle || !platformKey) return;
-    
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -29,15 +29,8 @@ export function useReviews(novelTitle, platformKey) {
     }
   }, [novelTitle, platformKey]);
 
-  // 리뷰 추가하기
   const addReview = async ({ content, authorName = '익명', rating }) => {
-    if (!novelTitle || !platformKey || !content) {
-      console.error('[useReviews] 필수 데이터 누락:', { novelTitle, platformKey, content });
-      return;
-    }
-
-    console.log('[useReviews] 리뷰 저장 시도:', { novelTitle, platformKey, content });
-
+    if (!novelTitle || !platformKey || !content) return;
     try {
       const { data, error } = await supabase
         .from('reviews')
@@ -46,53 +39,59 @@ export function useReviews(novelTitle, platformKey) {
           platform_key: platformKey,
           content,
           author_name: authorName || '익명',
-          rating: rating || null
+          rating: rating || null,
+          user_id: user?.id || null,
         }])
         .select()
         .single();
 
-      if (error) {
-        console.error('[useReviews] Supabase 저장 오류:', error);
-        throw error;
-      }
-      
-      console.log('[useReviews] 저장 성공:', data);
-      // 추가된 리뷰를 로컬 상태에 반영
+      if (error) throw error;
       setReviews(prev => [data, ...prev]);
       return data;
     } catch (err) {
-      console.error('[useReviews] 리뷰 추가 최종 오류:', err);
+      console.error('[useReviews] 리뷰 추가 오류:', err);
       throw err;
     }
   };
 
-  // 초기 로딩 및 실시간 구독
+  const updateReview = async (id, content) => {
+    const { error } = await supabase
+      .from('reviews')
+      .update({ content, updated_at: new Date().toISOString() })
+      .eq('id', id);
+    if (!error) {
+      setReviews(prev => prev.map(r => r.id === id ? { ...r, content } : r));
+    }
+  };
+
+  const deleteReview = async (id) => {
+    const { error } = await supabase.from('reviews').delete().eq('id', id);
+    if (!error) {
+      setReviews(prev => prev.filter(r => r.id !== id));
+    }
+  };
+
   useEffect(() => {
     if (!novelTitle || !platformKey) return;
-
     fetchReviews();
 
-    // 실시간 변경 사항 구독
     const channel = supabase
       .channel(`reviews-${novelTitle}-${platformKey}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'reviews',
-          filter: `novel_title=eq.${encodeURIComponent(novelTitle)} AND platform_key=eq.${platformKey}`
-        },
-        (payload) => {
-          setReviews(prev => [payload.new, ...prev]);
-        }
-      )
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'reviews',
+        filter: `novel_title=eq.${encodeURIComponent(novelTitle)} AND platform_key=eq.${platformKey}`
+      }, (payload) => {
+        setReviews(prev => {
+          if (prev.some(r => r.id === payload.new.id)) return prev;
+          return [payload.new, ...prev];
+        });
+      })
       .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, [fetchReviews, novelTitle, platformKey]);
 
-  return { reviews, loading, error, addReview, refetch: fetchReviews };
+  return { reviews, loading, error, addReview, updateReview, deleteReview, refetch: fetchReviews };
 }

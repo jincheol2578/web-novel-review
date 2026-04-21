@@ -7,6 +7,7 @@ const cors = require("cors");
 const searchRouter = require("./routes/search");
 const reviewRouter = require("./routes/review");
 const rankingRouter = require("./routes/ranking");
+const recommendRouter = require("./routes/recommend");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -53,6 +54,7 @@ app.use(rateLimiter);
 app.use("/api", searchRouter);
 app.use("/api", reviewRouter);
 app.use("/api", rankingRouter);
+app.use("/api", recommendRouter);
 
 // Health check
 app.get("/health", (req, res) => res.json({ status: "ok" }));

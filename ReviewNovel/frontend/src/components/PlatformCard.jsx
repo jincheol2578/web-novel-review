@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import ReviewItem from './ReviewItem';
+import RatingWidget from './RatingWidget';
 import { useReviews } from '../hooks/useReviews';
+import { useRatings } from '../hooks/useRatings';
+import { useAuth } from '../contexts/AuthContext';
 import styles from './PlatformCard.module.css';
 
 const PLATFORM_COLORS = {
@@ -18,7 +21,6 @@ const STATUS_LABEL = {
   error: '오류 발생',
 };
 
-// 플랫폼별 지표 레이블
 const RATING_META = {
   kakao:    { icon: '★', ratingLabel: '별점', countLabel: '누적조회' },
   naver:    { icon: '★', ratingLabel: '별점', countLabel: '', downloadLabel: '다운로드' },
@@ -28,31 +30,15 @@ const RATING_META = {
 };
 
 export default function PlatformCard({ data }) {
-  const { 
-    platform, 
-    platformKey, 
-    status, 
-    matchedTitle, 
-    url, 
-    rating, 
-    ratingCount, 
-    downloadCount, 
-    reviews: crawledReviews,
-    error, 
-    thumbnail,
-    genre,
-    isComplete,
-    totalChapter,
-    author,
-    category
+  const {
+    platform, platformKey, status, matchedTitle, url,
+    rating, ratingCount, downloadCount, reviews: crawledReviews,
+    error, thumbnail, genre, isComplete, totalChapter, author, category
   } = data;
-  
-  // Supabase 연동 리뷰 훅 사용
-  const { 
-    reviews: dbReviews, 
-    loading: reviewsLoading, 
-    addReview 
-  } = useReviews(matchedTitle, platformKey);
+
+  const { user } = useAuth();
+  const { reviews: dbReviews, loading: reviewsLoading, addReview, updateReview, deleteReview } = useReviews(matchedTitle, platformKey);
+  const { myRating, avgRating, totalCount, upsertRating } = useRatings(matchedTitle);
 
   const [showReviewInput, setShowReviewInput] = useState(false);
   const [reviewText, setReviewText] = useState('');
@@ -63,32 +49,26 @@ export default function PlatformCard({ data }) {
   const isSuccess = status === 'success';
   const meta = RATING_META[platformKey] || { icon: '★', ratingLabel: '평점', countLabel: '' };
 
-  // 크롤링된 리뷰와 DB 리뷰 합치기
   const allReviews = [
     ...(dbReviews || []).map(r => ({
       ...r,
       text: r.content,
       author: r.author_name,
       date: new Date(r.created_at).toLocaleDateString('ko-KR'),
-      isDbReview: true
+      isDbReview: true,
     })),
-    ...(crawledReviews || []).map(r => ({ ...r, isDbReview: false }))
+    ...(crawledReviews || []).map(r => ({ ...r, isDbReview: false })),
   ];
 
   const handleAddReview = async () => {
     if (!reviewText.trim() || submitting) return;
-    
     setSubmitting(true);
     try {
-      await addReview({
-        content: reviewText,
-        authorName: reviewAuthor || '익명'
-      });
+      await addReview({ content: reviewText, authorName: reviewAuthor || '익명' });
       setReviewText('');
       setReviewAuthor('');
       setShowReviewInput(false);
-    } catch (err) {
-      console.error('리뷰 등록 실패:', err);
+    } catch {
       alert('리뷰 등록에 실패했습니다.');
     } finally {
       setSubmitting(false);
@@ -96,33 +76,38 @@ export default function PlatformCard({ data }) {
   };
 
   return (
-    <div
-      className={`${styles.card} ${!isSuccess ? styles.muted : ''}`}
-      style={{ '--accent': accent }}
-    >
+    <div className={`${styles.card} ${!isSuccess ? styles.muted : ''}`} style={{ '--accent': accent }}>
       <div className={styles.cardHeader}>
         <div className={styles.cardTop}>
           <span className={styles.platformBadge}>{platform}</span>
-          {isSuccess && rating && (
-            <span className={styles.rating}>
-              {meta.icon} {meta.ratingLabel} {rating}
-              {ratingCount && meta.countLabel && (
-                <span className={styles.ratingCount}> · {meta.countLabel} {ratingCount}</span>
-              )}
-              {downloadCount && meta.downloadLabel && (
-                <span className={styles.ratingCount}> · {meta.downloadLabel} {downloadCount}</span>
-              )}
-            </span>
-          )}
+          <div className={styles.cardTopRight}>
+            {isSuccess && rating && (
+              <span className={styles.rating}>
+                {meta.icon} {meta.ratingLabel} {rating}
+                {ratingCount && meta.countLabel && (
+                  <span className={styles.ratingCount}> · {meta.countLabel} {ratingCount}</span>
+                )}
+                {downloadCount && meta.downloadLabel && (
+                  <span className={styles.ratingCount}> · {meta.downloadLabel} {downloadCount}</span>
+                )}
+              </span>
+            )}
+            {avgRating && (
+              <span className={styles.communityRating}>
+                ⭐ {avgRating}<small>/10</small>
+                <span className={styles.communityCount}>({totalCount}명)</span>
+              </span>
+            )}
+          </div>
         </div>
-        
+
         {thumbnail && (
           <div className={styles.thumbnailWrapper}>
-            <img 
-              src={thumbnail} 
-              alt={matchedTitle || '소설 썸네일'} 
+            <img
+              src={thumbnail}
+              alt={matchedTitle || '소설 썸네일'}
               className={styles.thumbnail}
-              onError={(e) => { e.target.style.display = 'none'; }}
+              onError={e => { e.target.style.display = 'none'; }}
             />
           </div>
         )}
@@ -131,16 +116,11 @@ export default function PlatformCard({ data }) {
       {isSuccess ? (
         <>
           {matchedTitle && (
-            <a
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.matchedTitle}
-            >
+            <a href={url} target="_blank" rel="noopener noreferrer" className={styles.matchedTitle}>
               {matchedTitle}
             </a>
           )}
-          
+
           <div className={styles.metaInfo}>
             {author && <span className={styles.metaTag}>✍️ {author}</span>}
             {category && <span className={styles.metaTag}>📂 {category}</span>}
@@ -155,10 +135,14 @@ export default function PlatformCard({ data }) {
             {totalChapter && <span className={styles.metaTag}>📑 {totalChapter}화</span>}
           </div>
 
+          {user && (
+            <RatingWidget value={myRating} onChange={upsertRating} />
+          )}
+
           <div className={styles.reviews}>
             <div className={styles.reviewsHeader}>
               <h4>리뷰 ({allReviews.length})</h4>
-              <button 
+              <button
                 className={styles.addReviewBtn}
                 onClick={() => setShowReviewInput(!showReviewInput)}
               >
@@ -168,21 +152,23 @@ export default function PlatformCard({ data }) {
 
             {showReviewInput && (
               <div className={styles.reviewInputForm}>
-                <input
-                  type="text"
-                  placeholder="닉네임 (기본: 익명)"
-                  value={reviewAuthor}
-                  onChange={(e) => setReviewAuthor(e.target.value)}
-                  className={styles.reviewAuthorInput}
-                />
+                {!user && (
+                  <input
+                    type="text"
+                    placeholder="닉네임 (기본: 익명)"
+                    value={reviewAuthor}
+                    onChange={e => setReviewAuthor(e.target.value)}
+                    className={styles.reviewAuthorInput}
+                  />
+                )}
                 <textarea
                   placeholder="소설에 대한 솔직한 의견을 남겨주세요..."
                   value={reviewText}
-                  onChange={(e) => setReviewText(e.target.value)}
+                  onChange={e => setReviewText(e.target.value)}
                   className={styles.reviewTextInput}
                   rows={3}
                 />
-                <button 
+                <button
                   className={styles.submitReviewBtn}
                   onClick={handleAddReview}
                   disabled={!reviewText.trim() || submitting}
@@ -195,7 +181,15 @@ export default function PlatformCard({ data }) {
             {reviewsLoading ? (
               <p className={styles.noReviews}>리뷰를 불러오는 중...</p>
             ) : allReviews.length > 0 ? (
-              allReviews.map((r, i) => <ReviewItem key={i} review={r} />)
+              allReviews.map((r, i) => (
+                <ReviewItem
+                  key={r.id || i}
+                  review={r}
+                  currentUserId={user?.id}
+                  onUpdate={updateReview}
+                  onDelete={deleteReview}
+                />
+              ))
             ) : (
               <p className={styles.noReviews}>아직 리뷰가 없습니다. 첫 리뷰를 남겨보세요!</p>
             )}

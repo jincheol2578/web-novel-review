@@ -18,12 +18,36 @@
   word-break: break-word;
 }
 
+.editArea {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  outline: none;
+}
+
+.editArea:focus {
+  border-color: #a855f7;
+}
+
 .meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 0.75rem;
   color: #888;
+  gap: 0.5rem;
+}
+
+.metaLeft {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 .author {
@@ -34,3 +58,50 @@
 .date {
   font-style: italic;
 }
+
+.actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.editBtn,
+.cancelBtn {
+  font-size: 0.72rem;
+  background: none;
+  color: #888;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.editBtn:hover { border-color: #a855f7; color: #7c3aed; }
+.cancelBtn:hover { background: #f0f0f0; }
+
+.saveBtn {
+  font-size: 0.72rem;
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.saveBtn:hover { background: #6d28d9; }
+
+.deleteBtn {
+  font-size: 0.72rem;
+  background: none;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.deleteBtn:hover { background: #ef4444; color: #fff; border-color: #ef4444; }

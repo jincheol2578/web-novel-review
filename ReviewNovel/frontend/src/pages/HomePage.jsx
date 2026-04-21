@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './HomePage.module.css';
+import Navbar from '../components/Navbar';
+import CommunityRanking from '../components/CommunityRanking';
 
 const PLATFORMS = [
   { key: 'kakao', label: '카카오페이지' },
@@ -77,6 +79,7 @@ export default function HomePage() {
 
   return (
     <div className={styles.container}>
+      <Navbar />
       <header className={styles.header}>
         <h1 className={styles.title}>웹소설 리뷰</h1>
         <p className={styles.subtitle}>여러 플랫폼의 리뷰와 평점을 한번에</p>
@@ -159,6 +162,8 @@ export default function HomePage() {
           🔄 새로고침
         </button>
       </section>
+
+      <CommunityRanking />
     </div>
   );
 }
