@@ -3,15 +3,12 @@
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
-  padding: 8px 16px 10px;
-  border-top: 1px solid #f0f0f0;
-  background: #fafafa;
 }
 
 .label {
-  font-size: 0.78rem;
-  color: #888;
-  min-width: 44px;
+  font-size: 0.75rem;
+  color: #64748b;
+  min-width: 40px;
   font-weight: 600;
 }
 
@@ -22,13 +19,13 @@
 }
 
 .score {
-  width: 26px;
-  height: 26px;
-  border: 1.5px solid #e0e0e0;
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid rgba(255,255,255,0.1);
   border-radius: 4px;
-  background: #fff;
-  color: #aaa;
-  font-size: 0.72rem;
+  background: rgba(255,255,255,0.05);
+  color: #64748b;
+  font-size: 0.68rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.12s;
@@ -40,14 +37,14 @@
 
 .score:hover:not(:disabled) {
   border-color: #a855f7;
-  color: #7c3aed;
-  background: #f5f0ff;
+  color: #c084fc;
+  background: rgba(168,85,247,0.15);
 }
 
 .score.filled {
-  background: #f5f0ff;
-  border-color: #c084fc;
-  color: #7c3aed;
+  background: rgba(168,85,247,0.15);
+  border-color: rgba(168,85,247,0.4);
+  color: #c084fc;
 }
 
 .score.active {
@@ -61,14 +58,14 @@
 }
 
 .selected {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-weight: 700;
-  color: #7c3aed;
+  color: #a855f7;
   margin-left: 4px;
 }
 
 .selected small {
-  font-size: 0.72rem;
-  color: #aaa;
+  font-size: 0.68rem;
+  color: #64748b;
   font-weight: 400;
 }

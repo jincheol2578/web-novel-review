@@ -1,20 +1,20 @@
 .section {
   width: 100%;
-  max-width: 900px;
+  max-width: 1100px;
   margin-top: 2rem;
-  background: #1a1b3a;
-  border: 1px solid #2a2b4a;
-  border-radius: 12px;
-  padding: 16px;
+  background: rgba(26,27,58,0.7);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 1.2rem;
 }
 
 .title {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #e0e0e0;
-  margin: 0 0 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #2a2b4a;
+  color: #e2e8f0;
+  margin: 0 0 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
 .list {
@@ -22,58 +22,61 @@
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 6px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.35rem;
 }
 
 .item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 6px;
-  border-radius: 6px;
-  transition: background 0.15s;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 8px;
+  transition: background 0.12s;
 }
 
 .item:hover {
-  background: #252650;
+  background: rgba(168,85,247,0.08);
 }
 
 .rank {
-  min-width: 24px;
-  height: 24px;
+  min-width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  font-size: 12px;
+  border-radius: 5px;
+  font-size: 11px;
   font-weight: 700;
-  background: #2a2b4a;
+  background: rgba(255,255,255,0.06);
   color: #94a3b8;
+  flex-shrink: 0;
 }
 
 .novelTitle {
   flex: 1;
-  font-size: 13px;
-  color: #e0e0e0;
+  font-size: 0.83rem;
+  color: #d1d5db;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .avg {
-  font-size: 14px;
+  font-size: 0.85rem;
   font-weight: 700;
   color: #fbbf24;
+  flex-shrink: 0;
 }
 
 .avg small {
-  font-size: 11px;
+  font-size: 0.68rem;
   color: #94a3b8;
   font-weight: 400;
 }
 
 .count {
-  font-size: 11px;
-  color: #6b6b8a;
+  font-size: 0.7rem;
+  color: #475569;
+  flex-shrink: 0;
 }

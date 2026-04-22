@@ -14,8 +14,18 @@ router.post('/recommend', requireAuth, async (req, res) => {
     return res.status(400).json({ error: '평점 데이터가 필요합니다.' });
   }
 
-  const list = ratings.map(r => `- ${r.title}: ${r.score}/10점`).join('\n');
-  const prompt = `다음은 사용자가 평가한 웹소설 목록입니다:\n${list}\n\n이 취향을 바탕으로 아직 읽지 않은 한국 웹소설 5편을 추천해 주세요. 반드시 JSON 배열만 응답하세요:\n[{"title":"","genre":"","reason":""}]`;
+  const list = ratings.map(r => {
+    let line = `- ${r.title}: ${r.score}/10점`;
+    if (r.reviews && r.reviews.length > 0) {
+      const reviewTexts = r.reviews
+        .map(rv => `"${rv.content.slice(0, 120).replace(/\n/g, ' ')}"`)
+        .join(' / ');
+      line += `\n  사용자 리뷰: ${reviewTexts}`;
+    }
+    return line;
+  }).join('\n');
+
+  const prompt = `다음은 사용자가 직접 평가한 웹소설 목록입니다 (평점과 리뷰 포함):\n${list}\n\n위 취향과 리뷰 내용을 종합해서 아직 읽지 않은 한국 웹소설 5편을 추천해 주세요. 반드시 JSON 배열만 응답하세요:\n[{"title":"","genre":"","reason":""}]`;
 
   try {
     const response = await axios.post(

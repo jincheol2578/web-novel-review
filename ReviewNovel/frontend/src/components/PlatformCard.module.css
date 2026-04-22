@@ -1,38 +1,75 @@
 .card {
-  background: #fff;
+  background: #13142e;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  border: 1px solid #f0f0f0;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-@media (max-width: 768px) {
-  .card {
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  }
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  border-color: rgba(168,85,247,0.3);
 }
 
+.muted {
+  opacity: 0.65;
+}
+
+/* Header */
 .cardHeader {
   position: relative;
 }
 
+.cardTop {
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.cardTopRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.platformBadge {
+  background: var(--accent);
+  color: #000;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.rating {
+  font-size: 0.88rem;
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.ratingCount {
+  color: #64748b;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+/* Thumbnail */
 .thumbnailWrapper {
   width: 100%;
   overflow: hidden;
-  background: #f0f2f5;
+  background: #0f0e2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid #eee;
+  max-height: 180px;
 }
 
 .thumbnail {
@@ -43,71 +80,16 @@
 }
 
 .card:hover .thumbnail {
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
-.cardTop {
-  padding: 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #f0f0f0;
-  gap: 8px;
-}
-
-.cardTopRight {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-}
-
-.communityRating {
-  font-size: 0.82rem;
-  color: #7c3aed;
-  font-weight: 600;
-}
-
-.communityRating small {
-  font-size: 0.7rem;
-  color: #aaa;
-  font-weight: 400;
-}
-
-.communityCount {
-  font-size: 0.72rem;
-  color: #aaa;
-  font-weight: 400;
-  margin-left: 2px;
-}
-
-.platformBadge {
-  background: var(--accent);
-  color: #000;
-  font-weight: 700;
-  font-size: 0.85rem;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-
-.rating {
-  font-size: 0.95rem;
-  color: #333;
-  font-weight: 600;
-}
-
-.ratingCount {
-  color: #777;
-  font-weight: 400;
-  font-size: 0.85rem;
-}
-
+/* Title & meta */
 .matchedTitle {
   display: block;
-  padding: 16px 16px 8px;
-  font-size: 1.1rem;
+  padding: 12px 14px 6px;
+  font-size: 1rem;
   font-weight: 700;
-  color: #111;
+  color: #e2e8f0;
   text-decoration: none;
   line-height: 1.4;
 }
@@ -118,132 +100,190 @@
 }
 
 .metaInfo {
-  padding: 0 16px 12px;
+  padding: 0 14px 10px;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
 }
 
 .metaTag {
-  font-size: 0.75rem;
-  background: #f0f2f5;
-  color: #555;
-  padding: 3px 8px;
+  font-size: 0.72rem;
+  background: rgba(255,255,255,0.06);
+  color: #94a3b8;
+  padding: 2px 7px;
   border-radius: 4px;
 }
 
 .complete {
-  background: #e6f4ea;
-  color: #1e7e34;
+  background: rgba(34,197,94,0.12);
+  color: #4ade80;
 }
 
 .ongoing {
-  background: #fff8e1;
-  color: #f57c00;
+  background: rgba(251,191,36,0.12);
+  color: #fbbf24;
 }
 
+/* Rating section */
+.ratingSection {
+  padding: 10px 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+}
+
+.ratingSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.ratingSectionLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.communityRatingInline {
+  font-size: 0.75rem;
+  color: #a78bfa;
+  font-weight: 600;
+}
+
+.communityRatingInline small {
+  color: #64748b;
+  font-weight: 400;
+}
+
+.loginHint {
+  font-size: 0.78rem;
+  color: #475569;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Reviews */
 .reviews {
   flex: 1;
-  padding: 0 16px 16px;
-  border-top: 1px solid #f0f0f0;
-  margin-top: 8px;
+  padding: 0 14px 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: 4px;
 }
 
 .reviewsHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 12px 0;
+  margin: 10px 0;
 }
 
 .reviewsHeader h4 {
   margin: 0;
-  font-size: 0.95rem;
-  color: #333;
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  font-weight: 600;
 }
 
 .addReviewBtn {
-  background: none;
-  border: 1px solid #ddd;
-  color: #555;
-  font-size: 0.8rem;
+  background: rgba(168,85,247,0.12);
+  border: 1px solid rgba(168,85,247,0.3);
+  color: #c084fc;
+  font-size: 0.78rem;
   padding: 4px 10px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
+  font-weight: 500;
 }
 
 .addReviewBtn:hover {
-  background: #f5f5f5;
-  border-color: #ccc;
+  background: rgba(168,85,247,0.2);
+  border-color: #a855f7;
 }
 
+/* Review input form */
 .reviewInputForm {
-  background: #f9f9f9;
-  padding: 12px;
+  background: rgba(255,255,255,0.04);
+  padding: 10px;
   border-radius: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
+  border: 1px solid rgba(255,255,255,0.07);
 }
 
 .reviewAuthorInput,
 .reviewTextInput {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  padding: 7px 10px;
+  background: #1a1b3a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  font-size: 0.88rem;
   box-sizing: border-box;
+  color: #e2e8f0;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.reviewAuthorInput:focus,
+.reviewTextInput:focus {
+  outline: none;
+  border-color: #a855f7;
+}
+
+.reviewAuthorInput::placeholder,
+.reviewTextInput::placeholder {
+  color: #475569;
 }
 
 .reviewTextInput {
   resize: vertical;
-  font-family: inherit;
 }
 
 .submitReviewBtn {
   align-self: flex-end;
-  background: var(--accent);
-  color: #000;
+  background: linear-gradient(135deg, #a855f7, #6366f1);
+  color: #fff;
   border: none;
   padding: 6px 16px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-weight: 600;
+  font-size: 0.85rem;
   cursor: pointer;
-  opacity: 0.9;
+  transition: opacity 0.15s;
 }
 
 .submitReviewBtn:hover:not(:disabled) {
-  opacity: 1;
+  opacity: 0.85;
 }
 
 .submitReviewBtn:disabled {
-  background: #ccc;
+  background: #334155;
+  color: #64748b;
   cursor: not-allowed;
 }
 
 .noReviews {
-  color: #999;
-  font-size: 0.9rem;
+  color: #475569;
+  font-size: 0.85rem;
   text-align: center;
-  padding: 20px 0;
+  padding: 16px 0;
 }
 
-.muted {
-  opacity: 0.7;
-}
-
+/* Error/not found state */
 .statusMessage {
-  padding: 32px 16px;
+  padding: 28px 16px;
   text-align: center;
-  color: #777;
+  color: #64748b;
 }
 
 .errorDetail {
   display: block;
-  font-size: 0.85rem;
-  color: #dc3545;
+  font-size: 0.8rem;
+  color: #f87171;
   margin-top: 4px;
 }

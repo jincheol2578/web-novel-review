@@ -1,11 +1,32 @@
 .nav {
   width: 100%;
-  max-width: 900px;
+  max-width: 1100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-bottom: 1.25rem;
   margin-bottom: 0.5rem;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navLink {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: color 0.15s;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.navLink:hover {
+  color: #a855f7;
+  border-bottom-color: #a855f7;
 }
 
 .logo {

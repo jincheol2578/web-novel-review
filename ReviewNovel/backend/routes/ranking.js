@@ -197,7 +197,7 @@ async function fetchKakaoRanking(genre = '전체') {
 
     if (items.length > 0) {
       console.log(`[KAKAO] SSR parse — ${items.length} items from category_uid=${gCode}`);
-      return items.slice(0, 10).sort((a, b) => a.rank - b.rank);
+      return items.slice(0, 100).sort((a, b) => a.rank - b.rank);
     }
     console.warn('[KAKAO] SSR parse succeeded but no items, falling back');
     throw new Error('No items from SSR');
@@ -207,9 +207,9 @@ async function fetchKakaoRanking(genre = '전체') {
 
   // Fallback: BFF API + HTML scraping
   const kakaoApis = [
-    `https://bff-page.kakao.com/api/gateway/api/v1/ranking/home?genre=${gCode}&period=WEEKLY&size=13`,
-    `https://bff-page.kakao.com/api/gateway/api/v1/search/series?keyword=&category_uid=${gCode}&is_complete=false&sort_type=POPULARITY&page=0&size=13`,
-    `https://bff-page.kakao.com/api/gateway/api/v1/ranking/list?genre=${gCode}&period=TOTAL&size=13`,
+    `https://bff-page.kakao.com/api/gateway/api/v1/ranking/home?genre=${gCode}&period=WEEKLY&size=100`,
+    `https://bff-page.kakao.com/api/gateway/api/v1/search/series?keyword=&category_uid=${gCode}&is_complete=false&sort_type=POPULARITY&page=0&size=100`,
+    `https://bff-page.kakao.com/api/gateway/api/v1/ranking/list?genre=${gCode}&period=TOTAL&size=100`,
   ];
 
   for (const apiUrl of kakaoApis) {
@@ -226,7 +226,7 @@ async function fetchKakaoRanking(genre = '전체') {
         list = data.result;
       }
       if (Array.isArray(list) && list.length > 0) {
-        return list.slice(0, 10).map((item, i) => ({
+        return list.slice(0, 100).map((item, i) => ({
           rank: i + 1,
           title: item.title || item.seriesTitle || item.series_title || item.name || '',
           url: `https://page.kakao.com/content/${item.series_id || item.seriesId || item.contentId || item.id || ''}`,
@@ -249,7 +249,7 @@ async function fetchKakaoRanking(genre = '전체') {
     const $ = cheerio.load(html);
     const items = [];
     $('a[href*="/content/"]').each((_, el) => {
-      if (items.length >= 10) return;
+      if (items.length >= 100) return;
       const $a = $(el);
       const title = ($a.attr('title') || $a.find('.ell, .tit, .name, .title').first().text() || $a.text()).trim();
       if (title.length > 1 && title.length < 100 &&
@@ -266,7 +266,7 @@ async function fetchKakaoRanking(genre = '전체') {
     });
     if (items.length > 0) {
       console.log(`[KAKAO] HTML scrape — ${items.length} items`);
-      return items.slice(0, 10);
+      return items.slice(0, 100);
     }
   } catch (e) {
     console.warn('[KAKAO] HTML scrape failed:', e.message);
@@ -301,7 +301,7 @@ async function fetchNaverRanking(genre = '전체') {
   }
 
   $('li.assemble_li_item, li.list_item, li.rank, li._item').each((_, el) => {
-    if (items.length >= 10) return;
+    if (items.length >= 100) return;
     const $li = $(el);
     const $a = $li.find('a[href*="productNo"]').first();
     if (!$a.length) return;
@@ -315,17 +315,21 @@ async function fetchNaverRanking(genre = '전체') {
     if (isValidNovelTitle(title)) {
       const href = $a.attr('href') || '';
       const cleanTitle = title.replace(/<\/?[^>]+(>|$)/g, '')
+        .replace(/\[독점\]/g, '')
         .replace(/^새로운\s*에피소드\s*/, '')
         .replace(/^신규\s*/, '')
         .trim();
 
       const isDuplicate = items.some(item => item.url === href || (href && item.url && href.includes(item.url.split('productNo=')[1])));
       if (!isDuplicate && cleanTitle) {
+        const rawThumb = $li.find('img').first().attr('src') || $li.find('img').first().attr('data-src') || '';
+        const thumbnail = rawThumb.startsWith('//') ? 'https:' + rawThumb : rawThumb;
         items.push({
           rank: items.length + 1,
           title: cleanTitle,
           url: href.startsWith('http') ? href : `https://series.naver.com${href}`,
-          genre: '', author: '', rating: '', episodes: '', ratingCount: '', thumbnail: '',
+          genre: '', author: '', rating: '', episodes: '', ratingCount: '',
+          thumbnail,
         });
       }
     }
@@ -333,14 +337,14 @@ async function fetchNaverRanking(genre = '전체') {
 
   if (items.length === 0) {
     $('a[href*="productNo"]').each((i, el) => {
-      if (items.length >= 10) return;
+      if (items.length >= 100) return;
       const $a = $(el);
       const title = ($a.find('.tit_book, .book_title, .title, .name, .tit').first().text() ||
                      $a.attr('title') ||
                      $a.text()).trim();
       if (isValidNovelTitle(title)) {
         const href = $a.attr('href') || '';
-        const cleanTitle = title.replace(/<\/?[^>]+(>|$)/g, '').trim();
+        const cleanTitle = title.replace(/<\/?[^>]+(>|$)/g, '').replace(/\[독점\]/g, '').trim();
         const isDuplicate = items.some(item => item.url === href || (href && item.url && href.includes(item.url.split('productNo=')[1])));
         if (!isDuplicate && cleanTitle) {
           items.push({
@@ -355,7 +359,7 @@ async function fetchNaverRanking(genre = '전체') {
   }
 
   if (items.length === 0) throw new Error('네이버시리즈 랭킹 파싱 실패');
-  return items.slice(0, 10);
+  return items.slice(0, 100);
 }
 
 async function fetchNovelpiaRanking(genre = '전체') {
@@ -368,7 +372,7 @@ async function fetchNovelpiaRanking(genre = '전체') {
     const seen = new Set();
 
     $('div[onclick*="/novel/"]').each((i, el) => {
-      if (items.length >= 10) return false;
+      if (items.length >= 100) return false;
       const $el = $(el);
       const onclick = $el.attr('onclick') || '';
       const urlMatch = onclick.match(/location\s*=\s*['"]([^'"]+)['"]/);
@@ -419,6 +423,11 @@ async function fetchNovelpiaRanking(genre = '전체') {
         else episodes = epText;
       }
 
+      const rawThumb = $el.find('img').first().attr('src') || $el.find('img').first().attr('data-src') || '';
+      const thumbnail = rawThumb
+        ? (rawThumb.startsWith('http') ? rawThumb : 'https://novelpia.com' + rawThumb)
+        : '';
+
       items.push({
         rank: items.length + 1,
         title,
@@ -428,7 +437,7 @@ async function fetchNovelpiaRanking(genre = '전체') {
         episodes,
         ratingCount,
         genre: '',
-        thumbnail: '',
+        thumbnail,
       });
     });
 
@@ -457,7 +466,7 @@ async function fetchMunpiaRanking(genre = '전체') {
     const seen = new Set();
 
     container.find('a').each((i, el) => {
-      if (items.length >= 10) return false;
+      if (items.length >= 100) return false;
       const $a = $(el);
       const url = $a.attr('href');
       if (!url) return;
@@ -473,6 +482,9 @@ async function fetchMunpiaRanking(genre = '전체') {
       const genre = $a.find('.genre').text().trim().replace(/\s+/g, ' ');
       const ratingCount = $a.find('.view-count').first().text().trim().replace(/,/g, '');
 
+      const rawThumb = $a.find('img').first().attr('src') || $a.find('img').first().attr('data-src') || '';
+      const thumbnail = rawThumb.startsWith('//') ? 'https:' + rawThumb : rawThumb;
+
       items.push({
         rank,
         title,
@@ -482,7 +494,7 @@ async function fetchMunpiaRanking(genre = '전체') {
         rating: '',
         episodes: '',
         ratingCount,
-        thumbnail: '',
+        thumbnail,
       });
     });
 
@@ -500,12 +512,12 @@ async function fetchMunpiaRanking(genre = '전체') {
 async function fetchJoaraRanking(genre = '전체') {
   try {
     const data = await getJson(
-      'https://api.joara.com/v2/search/query?api_key=mw_8ba234e7801ba288554ca07ae44c7188&ver=3.2.0&device=mw&deviceuid=96e10d445a2fee182478bcf9f5299cd781335f9b0e271f7131f5a764120f82c7&devicetoken=mw&query=&page=1&offset=10&store=all&orderby=score',
+      'https://api.joara.com/v2/search/query?api_key=mw_8ba234e7801ba288554ca07ae44c7188&ver=3.2.0&device=mw&deviceuid=96e10d445a2fee182478bcf9f5299cd781335f9b0e271f7131f5a764120f82c7&devicetoken=mw&query=&page=1&offset=100&store=all&orderby=score',
       { Referer: 'https://www.joara.com/' }
     );
 
     if (data.data?.list && data.data.list.length > 0) {
-      return data.data.list.slice(0, 10).map((item, i) => ({
+      return data.data.list.slice(0, 100).map((item, i) => ({
         rank: i + 1,
         title: item.subject || item.title || '',
         url: `https://www.joara.com/book/${item.book_code || item.bookCode}`,
@@ -528,7 +540,7 @@ async function fetchJoaraRanking(genre = '전체') {
     const $ = cheerio.load(html);
     const items = [];
     $('li.list_item, li.rank-item, li.rank, ul.rankList > li').each((_, el) => {
-      if (items.length >= 10) return;
+      if (items.length >= 100) return;
       const $li = $(el);
       const $a = $li.find('a[href*="/view/"], a[href*="/book/"]').first();
       if (!$a.length) return;
@@ -543,7 +555,7 @@ async function fetchJoaraRanking(genre = '전체') {
         });
       }
     });
-    if (items.length > 0) return items.slice(0, 10);
+    if (items.length > 0) return items.slice(0, 100);
   } catch (e) {
     console.warn('[JOARA] HTML scrape failed:', e.message);
   }
@@ -591,5 +603,13 @@ router.get('/ranking', async (req, res) => {
 
   res.json({ rankings });
 });
+
+router._fetchFns = {
+  kakao: fetchKakaoRanking,
+  naver: fetchNaverRanking,
+  novelpia: fetchNovelpiaRanking,
+  munpia: fetchMunpiaRanking,
+  joara: fetchJoaraRanking,
+};
 
 module.exports = router;

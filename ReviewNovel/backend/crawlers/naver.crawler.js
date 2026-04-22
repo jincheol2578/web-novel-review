@@ -26,7 +26,7 @@ class NaverCrawler extends BaseCrawler {
     $('h3 a[href*="productNo"], a[href*="productNo"]').slice(0, 10).each((i, el) => {
       const $el = $(el);
       const rawTitle = $el.text().trim();
-      const title = rawTitle.replace(/\s*\(총\s*\d+화.*?\)\s*$/, '').trim();
+      const title = rawTitle.replace(/\[독점\]/g, '').replace(/\s*\(총\s*\d+화.*?\)\s*$/, '').trim();
       const href = $el.attr('href');
       const $li = $el.closest('li');
       const score = $li.find('em.score_num').first().text().trim() || '';
