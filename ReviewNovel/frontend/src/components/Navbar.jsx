@@ -7,7 +7,10 @@ export default function Navbar() {
 
   return (
     <nav className={styles.nav}>
-      <Link to="/" className={styles.logo}>웹소설 리뷰</Link>
+      <div className={styles.left}>
+        <Link to="/" className={styles.logo}>웹소설 리뷰</Link>
+        <Link to="/ranking" className={styles.navLink}>랭킹</Link>
+      </div>
       <div className={styles.actions}>
         {!loading && (
           user ? (

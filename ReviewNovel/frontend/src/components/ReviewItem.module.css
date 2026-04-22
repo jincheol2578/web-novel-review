@@ -1,34 +1,38 @@
 .item {
-  padding: 0.75rem;
+  padding: 0.65rem 0.75rem;
   border-radius: 8px;
-  background: #f9f9f9;
-  margin-bottom: 0.5rem;
-  transition: background 0.2s;
+  background: rgba(255,255,255,0.04);
+  margin-bottom: 0.4rem;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.15s;
 }
 
 .item:hover {
-  background: #f0f0f0;
+  background: rgba(255,255,255,0.06);
 }
 
 .text {
-  font-size: 0.9rem;
-  color: #333;
-  margin: 0 0 0.5rem;
-  line-height: 1.5;
+  font-size: 0.88rem;
+  color: #d1d5db;
+  margin: 0 0 0.4rem;
+  line-height: 1.55;
   word-break: break-word;
 }
 
 .editArea {
   width: 100%;
   padding: 6px 8px;
-  border: 1px solid #ddd;
+  background: #1a1b3a;
+  border: 1px solid #334155;
   border-radius: 6px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-family: inherit;
+  color: #e2e8f0;
   resize: vertical;
   box-sizing: border-box;
   margin-bottom: 0.5rem;
   outline: none;
+  transition: border-color 0.15s;
 }
 
 .editArea:focus {
@@ -39,8 +43,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.75rem;
-  color: #888;
+  font-size: 0.72rem;
+  color: #64748b;
   gap: 0.5rem;
 }
 
@@ -52,7 +56,7 @@
 
 .author {
   font-weight: 600;
-  color: #555;
+  color: #94a3b8;
 }
 
 .date {
@@ -67,39 +71,39 @@
 
 .editBtn,
 .cancelBtn {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   background: none;
-  color: #888;
-  border: 1px solid #ddd;
+  color: #64748b;
+  border: 1px solid #334155;
   border-radius: 4px;
-  padding: 2px 8px;
+  padding: 2px 7px;
   cursor: pointer;
   transition: all 0.15s;
 }
 
-.editBtn:hover { border-color: #a855f7; color: #7c3aed; }
-.cancelBtn:hover { background: #f0f0f0; }
+.editBtn:hover { border-color: #a855f7; color: #c084fc; }
+.cancelBtn:hover { background: rgba(255,255,255,0.06); }
 
 .saveBtn {
-  font-size: 0.72rem;
-  background: #7c3aed;
+  font-size: 0.7rem;
+  background: linear-gradient(135deg, #a855f7, #6366f1);
   color: #fff;
   border: none;
   border-radius: 4px;
   padding: 2px 8px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: opacity 0.15s;
 }
 
-.saveBtn:hover { background: #6d28d9; }
+.saveBtn:hover { opacity: 0.85; }
 
 .deleteBtn {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   background: none;
-  color: #ef4444;
-  border: 1px solid #fca5a5;
+  color: #f87171;
+  border: 1px solid rgba(248,113,113,0.3);
   border-radius: 4px;
-  padding: 2px 8px;
+  padding: 2px 7px;
   cursor: pointer;
   transition: all 0.15s;
 }

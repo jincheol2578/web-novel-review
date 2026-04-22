@@ -10,7 +10,7 @@ class JoaraCrawler extends BaseCrawler {
 
   async crawl(novelTitle) {
     // API 사용
-    const apiUrl = `https://api.joara.com/v2/search/query?api_key=mw_8ba234e7801ba288554ca07ae44c7&ver=3.2.0&device=mw&deviceuid=96e10d445a2fee182478bcf9f5299cd781335f9b0e271f7131f5a764120f82c7&devicetoken=mw&query=${encodeURIComponent(novelTitle)}&page=1&offset=20&store=all&target=subject&age_constrict=all&chk_finish=&category=0&min_chapter=&max_chapter=&interval=&orderby=score&except_query=&except_target=&with_target_count=1&enable_fallback_match=false`;
+    const apiUrl = `https://api.joara.com/v2/search/query?api_key=mw_8ba234e7801ba288554ca07ae44c7188&ver=3.2.0&device=mw&deviceuid=96e10d445a2fee182478bcf9f5299cd781335f9b0e271f7131f5a764120f82c7&devicetoken=mw&query=${encodeURIComponent(novelTitle)}&page=1&offset=20&store=all&target=subject&age_constrict=all&chk_finish=&category=0&min_chapter=&max_chapter=&interval=&orderby=score&except_query=&except_target=&with_target_count=1&enable_fallback_match=false`;
 
     const searchJson = await this.fetchJson(apiUrl);
 

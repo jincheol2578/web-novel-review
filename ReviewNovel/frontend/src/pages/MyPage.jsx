@@ -76,7 +76,14 @@ export default function MyPage() {
 
   const handleRecommend = () => {
     if (myRatings.length === 0) { alert('평점을 남긴 소설이 없습니다.'); return; }
-    fetchRecommendations(myRatings.map(r => ({ title: r.novel_title, score: r.score })));
+    const ratingsWithReviews = myRatings.map(r => ({
+      title: r.novel_title,
+      score: r.score,
+      reviews: myReviews
+        .filter(rv => rv.novel_title === r.novel_title)
+        .map(rv => ({ content: rv.content })),
+    }));
+    fetchRecommendations(ratingsWithReviews);
   };
 
   return (

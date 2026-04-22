@@ -24,5 +24,63 @@ create policy "Anyone can insert reviews"
   with check (true);
 
 -- Index for faster lookups by novel and platform
-create index idx_reviews_novel_platform 
+create index idx_reviews_novel_platform
   on reviews(novel_title, platform_key);
+
+-- Rankings Table (cached crawler data, refreshed every 5 hours)
+create table if not exists rankings (
+  id bigserial primary key,
+  platform text not null,
+  rank int not null,
+  title text not null,
+  author text,
+  url text,
+  thumbnail text,
+  rating text,
+  rating_count text,
+  genre text,
+  crawled_at timestamptz default now()
+);
+
+create index idx_rankings_platform on rankings(platform, rank);
+
+alter table rankings enable row level security;
+
+create policy "Rankings are viewable by everyone"
+  on rankings for select
+  using (true);
+
+create policy "Anyone can insert rankings"
+  on rankings for insert
+  with check (true);
+
+create policy "Anyone can delete rankings"
+  on rankings for delete
+  using (true);
+
+-- Novels Table (autocomplete index from search + ranking crawls)
+create table if not exists novels (
+  id bigserial primary key,
+  title text not null,
+  platform text not null,
+  url text,
+  thumbnail text,
+  updated_at timestamptz default now(),
+  unique(title, platform)
+);
+
+create index idx_novels_title on novels(title);
+
+alter table novels enable row level security;
+
+create policy "Novels are viewable by everyone"
+  on novels for select
+  using (true);
+
+create policy "Anyone can insert novels"
+  on novels for insert
+  with check (true);
+
+create policy "Anyone can update novels"
+  on novels for update
+  using (true);

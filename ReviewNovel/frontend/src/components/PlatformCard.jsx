@@ -92,13 +92,7 @@ export default function PlatformCard({ data }) {
                 )}
               </span>
             )}
-            {avgRating && (
-              <span className={styles.communityRating}>
-                ⭐ {avgRating}<small>/10</small>
-                <span className={styles.communityCount}>({totalCount}명)</span>
-              </span>
-            )}
-          </div>
+            </div>
         </div>
 
         {thumbnail && (
@@ -135,9 +129,21 @@ export default function PlatformCard({ data }) {
             {totalChapter && <span className={styles.metaTag}>📑 {totalChapter}화</span>}
           </div>
 
-          {user && (
-            <RatingWidget value={myRating} onChange={upsertRating} />
-          )}
+          <div className={styles.ratingSection}>
+            <div className={styles.ratingSectionHeader}>
+              <span className={styles.ratingSectionLabel}>내 평점</span>
+              {avgRating && (
+                <span className={styles.communityRatingInline}>
+                  커뮤니티 ⭐ {avgRating}/10 <small>({totalCount}명)</small>
+                </span>
+              )}
+            </div>
+            {user ? (
+              <RatingWidget value={myRating} onChange={upsertRating} />
+            ) : (
+              <p className={styles.loginHint}>로그인하면 평점을 남길 수 있어요</p>
+            )}
+          </div>
 
           <div className={styles.reviews}>
             <div className={styles.reviewsHeader}>

@@ -4,10 +4,14 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const cron = require("node-cron");
 const searchRouter = require("./routes/search");
 const reviewRouter = require("./routes/review");
 const rankingRouter = require("./routes/ranking");
+const rankingCacheRouter = require("./routes/rankingCache");
+const novelsRouter = require("./routes/novels");
 const recommendRouter = require("./routes/recommend");
+const { crawlAndStoreRankings } = require("./routes/rankingScheduler");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -18,7 +22,11 @@ const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW = parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000', 10); // default 1min
 const RATE_LIMIT_MAX = parseInt(process.env.RATE_LIMIT_MAX || '30', 10); // default 30 requests/window
 
+// Routes that are cheap DB reads — exempt from rate limiting
+const RATE_LIMIT_EXEMPT = ['/api/ranking/cached', '/api/novels/autocomplete'];
+
 function rateLimiter(req, res, next) {
+  if (RATE_LIMIT_EXEMPT.some(p => req.path.startsWith(p))) return next();
   const ip = req.ip || req.connection.remoteAddress || 'unknown';
   const now = Date.now();
   if (!rateLimitMap.has(ip)) {
@@ -54,6 +62,8 @@ app.use(rateLimiter);
 app.use("/api", searchRouter);
 app.use("/api", reviewRouter);
 app.use("/api", rankingRouter);
+app.use("/api", rankingCacheRouter);
+app.use("/api", novelsRouter);
 app.use("/api", recommendRouter);
 
 // Health check
@@ -65,9 +75,20 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message || "서버 오류" });
 });
 
+// Ranking scheduler: every 5 hours
+cron.schedule("0 */5 * * *", () => {
+  console.log("[SCHEDULER] Triggered ranking crawl (5h interval)");
+  crawlAndStoreRankings().catch(e => console.error("[SCHEDULER] Cron error:", e.message));
+});
+
 function start() {
   app.listen(PORT, () => {
     console.log(`ReviewNovel 백엔드 서버 실행 중: http://localhost:${PORT}`);
+    // Run initial crawl on startup if DB is configured
+    if (process.env.SUPABASE_URL && (process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY)) {
+      console.log("[SCHEDULER] Running initial ranking crawl on startup...");
+      crawlAndStoreRankings().catch(e => console.error("[SCHEDULER] Initial crawl error:", e.message));
+    }
   });
 }
 

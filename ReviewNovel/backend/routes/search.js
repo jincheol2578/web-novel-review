@@ -2,6 +2,28 @@
 
 const express = require('express');
 const { searchNovels } = require('../crawlers/index');
+const supabase = require('../lib/supabase');
+
+async function saveNovelsFromResults(events) {
+  if (!supabase) return;
+  const rows = events
+    .filter(e => e.type === 'platform_result' && e.status === 'found' && e.title)
+    .map(e => ({
+      title: e.matchedTitle || e.title || '',
+      platform: e.platformKey || e.platform || '',
+      url: e.url || '',
+      thumbnail: e.thumbnail || '',
+      updated_at: new Date().toISOString(),
+    }))
+    .filter(r => r.title && r.platform);
+
+  if (!rows.length) return;
+  try {
+    await supabase.from('novels').upsert(rows, { onConflict: 'title,platform', ignoreDuplicates: false });
+  } catch (err) {
+    console.warn('[SEARCH] Failed to save novels:', err.message);
+  }
+}
 
 const router = express.Router();
 
@@ -47,9 +69,16 @@ router.get('/search/stream', async (req, res) => {
     }
   };
 
+  const collectedEvents = [];
+  const sendEventAndCollect = (data) => {
+    sendEvent(data);
+    if (data.type === 'platform_result') collectedEvents.push(data);
+  };
+
   try {
-    await searchNovels(novels, sendEvent);
+    await searchNovels(novels, sendEventAndCollect);
     sendEvent({ type: 'done' });
+    saveNovelsFromResults(collectedEvents);
   } catch (err) {
     sendEvent({ type: 'error', message: err.message });
   } finally {
